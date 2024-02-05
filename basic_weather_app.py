@@ -1,31 +1,35 @@
-import requests, json
-# base URL
-BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
-# City Name CITY = "Hyderabad"
-# API key API_KEY = "Your API Key"
-# upadting the URL
-URL = BASE_URL + "q=" + CITY + "&appid=" + API_KEY
-# HTTP request
-response = requests.get(URL)
-# checking the status code of the request
-if response.status_code == 200:
-   # getting data in the json format
-   data = response.json()
-   # getting the main dict block
-   main = data['main']
-   # getting temperature
-   temperature = main['temp']
-   # getting the humidity
-   humidity = main['humidity']
-   # getting the pressure
-   pressure = main['pressure']
-   # weather report
-   report = data['weather']
-   print(f"{CITY:-^30}")
-   print(f"Temperature: {temperature}")
-   print(f"Humidity: {humidity}")
-   print(f"Pressure: {pressure}")
-   print(f"Weather Report: {report[0]['description']}")
-else:
-   # showing the error message
-   print("Error in the HTTP request")
+pip install requests
+import requests
+
+def fetch_weath(api_key, locn):
+    base_url = "http://api.openweathermap.org/data/2.5/weather"
+    params = {"q": locn, "appid": api_key, "units": "metric"}
+
+    response = requests.get(base_url, params=params)
+
+    if (response.status_code == 200):
+        weath_data = response.json()
+        return weath_data
+    else:
+        return None
+
+def disp_weath(weath_data):
+    if weath_data:
+        temp = weath_data["main"]["temp"]
+        humidity = weath_data["main"]["humidity"]
+        weath_conds = weath_data["weather"][0]["description"]
+
+        print(f"Temperature: {temp}°C")
+        print(f"Humidity: {humidity}%")
+        print(f"Weather Conditions: {weath_conds}")
+    else:
+        print("Unable to fetch weather data.")
+
+if __name__ == "__main__":
+    api_key = "YOUR_API_KEY"
+    locn = input("Enter city or zip code: ")
+
+    weath_data = get_weath(api_key, locn)
+
+    disp_weath(weath_data)
+   
